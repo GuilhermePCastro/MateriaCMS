@@ -22,3 +22,47 @@ function criar_tabela(){
                     nome VARCHAR(100) NOT NULL,
                     whatsapp BIGINT UNSIGNED NOT NULL)");
 }
+
+register_deactivation_hook(__FILE__,'apagar_tabela');
+
+function apagar_tabela(){
+
+    global $wpdb;
+
+    $wpdb -> query("DROP TABLE {$wpdb -> prefix}agenda");
+}
+
+add_action('admin_menu', 'coloca_menu');
+
+function coloca_menu(){
+
+    // Primeiro Menu
+    add_menu_page('Configurações Plugin', 'Crudão', 'administrator', 'meu-plugin-config', 'abre_config','dashicons-format-chat');
+
+    //Adicionando um submenu
+    //add_submenu_page('tools.php','Configurações Plugin', 'Plugin Monstrão', 'administrator', 'meu-plugin-config','abre_config');
+}
+
+function abre_config(){
+
+    global $wpdb;
+
+    if(isset($_GET['apagar'])){
+        
+        $id = preg_replace('/\D/','',$_GET['apagar']);
+
+        $wpdb -> query("DELETE FROM {$wpdb->prefix}agenda WHERE id = $id");
+    }
+
+    if(isset($_POST['submit'])){
+
+        if($_POST['submit'] == 'Gravar'){
+            $wpdb -> query(
+                $wpdb -> prepare("INSERT INTO {$wpdb->prefix}agenda (nome, whatsapp)
+                                            VALUES (%s, %d)", $_POST['nome'], $_POST['whatsapp']));
+        }
+    }
+
+    $contatos = $wpdb ->get_results("SELECT * FROM {$wpdb->prefix}agenda");
+    require 'lista_tpl.php';
+}
