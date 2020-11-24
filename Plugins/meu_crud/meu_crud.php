@@ -47,6 +47,29 @@ function abre_config(){
 
     global $wpdb;
 
+    //exibe form de editar
+    if(isset($_GET['editar']) && !isset($_POST['alterar'])){
+
+        //recuperar os dados
+        $id = preg_replace('/\D/','', $_GET['editar']);
+
+        $reg = $wpdb -> get_results("SELECT id, nome, whatsapp FROM {$wpdb->prefix}agenda WHERE id = $id");
+       
+        require 'editar_tpl.php';
+        exit();
+    }
+
+    if(isset($_POST['alterar'])){
+        
+        $return = $wpdb -> query($wpdb -> prepare("UPDATE {$wpdb->prefix}agenda SET nome = %s, whatsapp = %d WHERE  id = %d", $_POST['nome'], $_POST['whatsapp'], $_POST['id']));
+        if($return )
+        {
+            $msg = 'Registro alterado com sucesso';
+        }else{
+            $erro = 'Erro ao tentar alterar';
+        }
+    }
+
     if(isset($_GET['apagar'])){
         
         $id = preg_replace('/\D/','',$_GET['apagar']);
