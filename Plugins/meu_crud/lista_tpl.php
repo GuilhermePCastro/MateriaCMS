@@ -7,7 +7,8 @@
             <tr>
                 <td>Nome</td>
                 <td>ZipZop</td>
-                <td>Ações</td>
+                <td></td>
+                <td></td>
             </tr>
             <?php
                 foreach ($contatos as $key => $value){
@@ -15,12 +16,14 @@
                             <td>{$value -> nome}</td>
                             <td>{$value -> whatsapp}</td>
                             <td><a href='?page={$_GET['page']}&apagar={$value -> id}'>Delete</a></td>
+                            <td><a href='?page={$_GET['page']}&editar={$value -> id}'>Editar</a></td>
                         </tr>";
                 }
             ?>
             <tr>
                 <td><input type="text" name="nome" placeholder="Nome"></td>
                 <td><input type="text" name="whatsapp" placeholder="Whatsapp"></td>
+                <td></td>
                 <td><?php submit_button('Gravar'); ?></td>
             </tr>
         </table>
